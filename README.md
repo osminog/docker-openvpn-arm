@@ -18,6 +18,10 @@ a corresponding [Digital Ocean Community Tutorial](http://bit.ly/1AGUZkq).
 
 ## Quick Start
 
+* Clone and build image with
+  
+        docker build -f Dockerfile.arm -t stockmind/docker-openvpn-arm:latest .
+
 * Pick a name for the `$OVPN_DATA` data volume container. It's recommended to
   use the `ovpn-data-` prefix to operate seamlessly with the reference systemd
   service.  Users are encourage to replace `example` with a descriptive name of
@@ -30,20 +34,20 @@ a corresponding [Digital Ocean Community Tutorial](http://bit.ly/1AGUZkq).
   private key used by the newly generated certificate authority.
 
         docker volume create --name $OVPN_DATA
-        docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://VPN.SERVERNAME.COM
-        docker run -v $OVPN_DATA:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki
+        docker run -v $OVPN_DATA:/etc/openvpn --rm stockmind/docker-openvpn-arm ovpn_genconfig -u udp://VPN.SERVERNAME.COM
+        docker run -v $OVPN_DATA:/etc/openvpn --rm -it stockmind/docker-openvpn-arm ovpn_initpki
 
 * Start OpenVPN server process
 
-        docker run -v $OVPN_DATA:/etc/openvpn -d -p 1194:1194/udp --cap-add=NET_ADMIN kylemanna/openvpn
+        docker run -v $OVPN_DATA:/etc/openvpn -d -p 1194:1194/udp --cap-add=NET_ADMIN stockmind/docker-openvpn-arm
 
 * Generate a client certificate without a passphrase
 
-        docker run -v $OVPN_DATA:/etc/openvpn --rm -it kylemanna/openvpn easyrsa build-client-full CLIENTNAME nopass
+        docker run -v $OVPN_DATA:/etc/openvpn --rm -it stockmind/docker-openvpn-arm easyrsa build-client-full CLIENTNAME nopass
 
 * Retrieve the client configuration with embedded certificates
 
-        docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient CLIENTNAME > CLIENTNAME.ovpn
+        docker run -v $OVPN_DATA:/etc/openvpn --rm stockmind/docker-openvpn-arm ovpn_getclient CLIENTNAME > CLIENTNAME.ovpn
 
 ## Next Steps
 
@@ -68,7 +72,7 @@ If you prefer to use `docker-compose` please refer to the [documentation](docs/d
 
 * Create an environment variable with the name DEBUG and value of 1 to enable debug output (using "docker -e").
 
-        docker run -v $OVPN_DATA:/etc/openvpn -p 1194:1194/udp --privileged -e DEBUG=1 kylemanna/openvpn
+        docker run -v $OVPN_DATA:/etc/openvpn -p 1194:1194/udp --privileged -e DEBUG=1 stockmind/docker-openvpn-arm
 
 * Test using a client that has openvpn installed correctly
 
